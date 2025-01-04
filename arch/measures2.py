@@ -7,12 +7,12 @@ def PSNR(original, compressed):
     if original is None or compressed is None:
         raise ValueError("One or both images could not be loaded.")
     
-    # Ensure the dimensions are the same
+ 
     if original.shape != compressed.shape:
         raise ValueError(f"Image dimensions do not match: {original.shape} vs {compressed.shape}")
     
     mse = np.mean((original - compressed) ** 2)
-    if mse == 0:  # MSE is zero means no noise is present in the signal.
+    if mse == 0: 
         return 100
     max_pixel = 255.0
     psnr = 20 * log10(max_pixel / sqrt(mse))
@@ -64,38 +64,38 @@ def getUQI(I1, I2):
     return uqi
 
 def main():
-    # Directories
+
     original_dir = "C:\\Users\\Zeinab\\Desktop\\work\\research\\SimUESR-main\\SimUESR-main\\arch\\data_lr_2x\\val\\images"
     compressed_dir = "C:\\Users\\Zeinab\\Desktop\\work\\research\\SimUESR-main\\SimUESR-main\\arch\\output_images"
     
-    # Get sorted list of image files in both directories
+  
     original_images = sorted([f for f in os.listdir(original_dir) if f.endswith(('.jpg', '.jpeg', '.png'))])
     compressed_images = sorted([f for f in os.listdir(compressed_dir) if f.endswith(('.jpg', '.jpeg', '.png'))])
 
-    # Ensure both directories have the same number of images
+
     if len(original_images) != len(compressed_images):
         print(f"Warning: The number of images in {original_dir} and {compressed_dir} don't match.")
         return
 
-    # Process each pair of images
+
     for original_img, compressed_img in zip(original_images, compressed_images):
         original_path = os.path.join(original_dir, original_img)
         compressed_path = os.path.join(compressed_dir, compressed_img)
         
-        # Check if the compressed image exists
+
         if not os.path.exists(compressed_path):
             print(f"Compressed image for {original_img} not found at {compressed_path}")
             continue
         
         try:
-            # Read original and compressed images
+
             original = cv2.imread(original_path)
             compressed = cv2.imread(compressed_path)
 
-            # Resize the compressed image to match the original image dimensions
+           
             compressed_resized = cv2.resize(compressed, (original.shape[1], original.shape[0]))
 
-            # Calculate PSNR
+           
             psnr_value = PSNR(original, compressed_resized)
             print(f"PSNR for {original_img}: {psnr_value} dB")
 
